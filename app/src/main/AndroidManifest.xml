@@ -29,6 +29,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".helper.SelectImageActivity"
+            android:label="@string/select_an_image"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RecognizeActivity"
+            android:label="@string/title_activity_recognize"
+            >
+        </activity>
     </application>
 
 </manifest>

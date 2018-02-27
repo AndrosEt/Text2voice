@@ -13,7 +13,16 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="4">
+
+        <Button
+            android:id="@+id/bt_camera_input"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:lines="2"
+            android:text="拍照输入"
+            android:textSize="12dp" />
 
         <Button
             android:id="@+id/speak"

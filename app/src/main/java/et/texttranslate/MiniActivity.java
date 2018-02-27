@@ -1,6 +1,8 @@
 package et.texttranslate;
 
 import android.Manifest;
+import android.Manifest.permission;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -75,7 +77,7 @@ public class MiniActivity extends AppCompatActivity {
     // =========== 以下为UI部分 ==================================================
 
     private Button mSpeak;
-    private Button mStop, mClean;
+    private Button mStop, mClean, mCameraInput;
     private EditText mShowText;
     private Switch mSwitch;
 
@@ -270,6 +272,7 @@ public class MiniActivity extends AppCompatActivity {
         mSpeak = (Button) this.findViewById(R.id.speak);
         mStop = (Button) this.findViewById(R.id.stop);
         mClean = (Button) findViewById(R.id.bt_clean);
+        mCameraInput = (Button) findViewById(R.id.bt_camera_input);
         mSwitch = (Switch) findViewById(R.id.st_sound);
         mShowText = (EditText) this.findViewById(R.id.et_text);
         View.OnClickListener listener = new View.OnClickListener() {
@@ -285,6 +288,11 @@ public class MiniActivity extends AppCompatActivity {
                     case R.id.bt_clean:
                         mShowText.setText("");
                         break;
+                    case R.id.bt_camera_input:
+                        Intent intent = new Intent();
+                        intent.setClass(MiniActivity.this, RecognizeActivity.class);
+                        MiniActivity.this.startActivity(intent);
+                        break;
                     default:
                         break;
                 }
@@ -293,6 +301,7 @@ public class MiniActivity extends AppCompatActivity {
         mSpeak.setOnClickListener(listener);
         mStop.setOnClickListener(listener);
         mClean.setOnClickListener(listener);
+        mCameraInput.setOnClickListener(listener);
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -349,7 +358,9 @@ public class MiniActivity extends AppCompatActivity {
                 Manifest.permission.WRITE_SETTINGS,
                 Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.ACCESS_WIFI_STATE,
-                Manifest.permission.CHANGE_WIFI_STATE
+                Manifest.permission.CHANGE_WIFI_STATE,
+                permission.READ_EXTERNAL_STORAGE,
+                permission.MOUNT_UNMOUNT_FILESYSTEMS
         };
 
         ArrayList<String> toApplyList = new ArrayList<String>();

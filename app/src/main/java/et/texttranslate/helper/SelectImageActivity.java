@@ -135,7 +135,7 @@ public class SelectImageActivity extends ActionBarActivity {
                 // Continue only if the File was successfully created
                 if (mFilePhotoTaken != null) {
                     mUriPhotoTaken = FileProvider.getUriForFile(this,
-                            "com.microsoft.projectoxford.visionsample.fileprovider",
+                            "et.texttranslate.fileprovider",
                             mFilePhotoTaken);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
 

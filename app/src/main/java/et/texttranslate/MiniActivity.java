@@ -4,6 +4,7 @@ import android.Manifest;
 import android.Manifest.permission;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.DataSetObserver;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,9 +14,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 
 import com.baidu.tts.auth.AuthInfo;
@@ -79,7 +88,8 @@ public class MiniActivity extends AppCompatActivity {
     private Button mSpeak;
     private Button mStop, mClean, mCameraInput;
     private EditText mShowText;
-    private Switch mSwitch;
+//    private Switch mSwitch;
+    private Spinner mSpinner;
 
     protected Handler mainHandler;
 
@@ -89,13 +99,14 @@ public class MiniActivity extends AppCompatActivity {
             + "离线功能需要手动将assets目录下的资源文件复制到TEMP_DIR =/sdcard/baiduTTS \n"
             + "完整的SDK调用方式可以参见MainActivity\n\n";
 
+    private final String[] voice = new String[]{"普通女声", "普通男声", "特别男声", "情感男声<度逍遥>", "情感儿童声<度丫丫>"};
 
     private static final String TAG = "MiniActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_mini);
         initView();
         initPermission();
@@ -273,8 +284,28 @@ public class MiniActivity extends AppCompatActivity {
         mStop = (Button) this.findViewById(R.id.stop);
         mClean = (Button) findViewById(R.id.bt_clean);
         mCameraInput = (Button) findViewById(R.id.bt_camera_input);
-        mSwitch = (Switch) findViewById(R.id.st_sound);
+//        mSwitch = (Switch) findViewById(R.id.st_sound);
         mShowText = (EditText) this.findViewById(R.id.et_text);
+        mSpinner = (Spinner) findViewById(R.id.spinner);
+
+        ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<>(MiniActivity.this, android.R.layout.simple_spinner_item, voice);
+        stringArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(stringArrayAdapter);
+
+        mSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, String.valueOf(position));
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, "0");
+            }
+
+        });
+
         View.OnClickListener listener = new View.OnClickListener() {
             public void onClick(View v) {
                 int id = v.getId();
@@ -302,12 +333,12 @@ public class MiniActivity extends AppCompatActivity {
         mStop.setOnClickListener(listener);
         mClean.setOnClickListener(listener);
         mCameraInput.setOnClickListener(listener);
-        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, isChecked?"0":"1");
-            }
-        });
+//        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, isChecked?"0":"1");
+//            }
+//        });
         mainHandler = new Handler() {
             /*
              * @param msg

@@ -39,7 +39,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:lines="2"
-            android:text="停止合成引擎"
+            android:text="停止合成"
             android:textSize="12dp" />
 
         <Button
@@ -53,29 +53,47 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        >
-        <TextView
-            android:gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="男声"/>
-        <Switch
-            android:layout_margin="10dp"
-            android:id="@+id/st_sound"
-            android:checked="true"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            />
-        <TextView
-            android:gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="女声"/>
-    </LinearLayout>
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--&gt;-->
+        <!--<TextView-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:text="男声"/>-->
+        <!--<Switch-->
+            <!--android:layout_margin="10dp"-->
+            <!--android:id="@+id/st_sound"-->
+            <!--android:checked="true"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--/>-->
+        <!--<TextView-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:text="女声"/>-->
+    <!--</LinearLayout>-->
 
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:text="声音类型："
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Spinner
+            android:layout_gravity="center_vertical"
+            android:id="@+id/spinner"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
 
 </LinearLayout>

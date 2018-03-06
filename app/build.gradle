@@ -8,6 +8,8 @@ android {
         applicationId "et.texttranslate"
         minSdkVersion 17
         targetSdkVersion 25
+        versionCode 2
+        versionName "1.1.0"
     }
 
     buildTypes {

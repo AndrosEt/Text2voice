@@ -6,13 +6,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.microsoft.projectoxford.vision.VisionServiceClient;
@@ -103,7 +103,7 @@ public class RecognizeActivity extends ActionBarActivity {
     // Called when image selection is done.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("AnalyzeActivity", "onActivityResult");
+//        Log.d("AnalyzeActivity", "onActivityResult");
         switch (requestCode) {
             case REQUEST_SELECT_IMAGE:
                 if(resultCode == RESULT_OK) {
@@ -118,8 +118,8 @@ public class RecognizeActivity extends ActionBarActivity {
                         imageView.setImageBitmap(mBitmap);
 
                         // Add detection log.
-                        Log.d("AnalyzeActivity", "Image: " + mImageUri + " resized to " + mBitmap.getWidth()
-                                + "x" + mBitmap.getHeight());
+//                        Log.d("AnalyzeActivity", "Image: " + mImageUri + " resized to " + mBitmap.getWidth()
+//                                + "x" + mBitmap.getHeight());
 
                         doRecognize();
                     }
@@ -133,13 +133,13 @@ public class RecognizeActivity extends ActionBarActivity {
 
     public void doRecognize() {
         mButtonSelectImage.setEnabled(false);
-        mEditText.setText("Analyzing...");
+        mEditText.setText(getString(R.string.analyzing));
 
         try {
             new doRequest().execute();
         } catch (Exception e)
         {
-            mEditText.setText("Error encountered. Exception is: " + e.toString());
+            mEditText.setText(getString(R.string.analyzing_error) + e.toString());
         }
     }
 
@@ -155,7 +155,7 @@ public class RecognizeActivity extends ActionBarActivity {
         ocr = this.client.recognizeText(inputStream, LanguageCodes.AutoDetect, true);
 
         String result = gson.toJson(ocr);
-        Log.d("result", result);
+//        Log.d("result", result);
 
         return result;
     }
@@ -184,7 +184,7 @@ public class RecognizeActivity extends ActionBarActivity {
             // Display based on error existence
 
             if (e != null) {
-                mEditText.setText("Error: " + e.getMessage());
+                mEditText.setText(getString(R.string.analyzing_error) + e.getMessage());
                 this.e = null;
             } else {
                 Gson gson = new Gson();
@@ -202,6 +202,8 @@ public class RecognizeActivity extends ActionBarActivity {
                 }
 
                 mEditText.setText(result);
+
+                Toast.makeText(RecognizeActivity.this,R.string.analyzing_complete,Toast.LENGTH_LONG).show();
             }
             mButtonSelectImage.setEnabled(true);
         }

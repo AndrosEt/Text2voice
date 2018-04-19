@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
@@ -38,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import et.texttranslate.control.InitConfig;
+import et.texttranslate.listener.FileSaveListener;
 import et.texttranslate.listener.UiMessageListener;
 import et.texttranslate.util.AutoCheck;
 
@@ -102,6 +104,7 @@ public class MiniActivity extends AppCompatActivity {
 
     private static final String TAG = "MiniActivity";
 
+    private FileSaveListener listener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +121,14 @@ public class MiniActivity extends AppCompatActivity {
      */
     private void initTTs() {
         LoggerProxy.printable(true); // 日志打印在logcat中
+        String path;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
+                && Environment.getExternalStorageDirectory().exists()) {
+            path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        } else {
+            path = getFilesDir().getAbsolutePath();
+        }
+        listener = new FileSaveListener(new Handler(), path);
         boolean isMix = ttsMode.equals(TtsMode.MIX);
         boolean isSuccess;
         if (isMix) {
@@ -265,7 +276,9 @@ public class MiniActivity extends AppCompatActivity {
             print("[ERROR], 初始化失败");
             return;
         }
+        mSpeechSynthesizer.setSpeechSynthesizerListener(listener);
         int result = mSpeechSynthesizer.speak(mShowText.getText().toString());
+        mSpeechSynthesizer.synthesize(mShowText.getText().toString());
         print("合成并播放 按钮已经点击");
         checkResult(result, "speak");
     }

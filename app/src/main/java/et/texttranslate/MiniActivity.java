@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
 import android.media.AudioManager;
+import android.media.MediaFormat;
+import android.net.rtp.AudioCodec;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -13,6 +15,7 @@ import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -37,11 +40,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import et.texttranslate.control.InitConfig;
 import et.texttranslate.listener.FileSaveListener;
 import et.texttranslate.listener.UiMessageListener;
 import et.texttranslate.util.AutoCheck;
+import et.texttranslate.util.EncodeUtil;
 
 /**
  * 除了SDK，该类没有任何依赖，可以直接复制进你的项目
@@ -276,11 +281,24 @@ public class MiniActivity extends AppCompatActivity {
             print("[ERROR], 初始化失败");
             return;
         }
-        mSpeechSynthesizer.setSpeechSynthesizerListener(listener);
+//        mSpeechSynthesizer.setSpeechSynthesizerListener(listener);
         int result = mSpeechSynthesizer.speak(mShowText.getText().toString());
         mSpeechSynthesizer.synthesize(mShowText.getText().toString());
         print("合成并播放 按钮已经点击");
         checkResult(result, "speak");
+        String path=Environment.getExternalStorageDirectory().getAbsolutePath();
+        final EncodeUtil audioCodec = EncodeUtil.newInstance();
+        audioCodec.setEncodeType(MediaFormat.MIMETYPE_AUDIO_AAC);
+        audioCodec.setIOPath(path + "/output-test.pcm", path + "/test.mp3");
+        audioCodec.prepare();
+        audioCodec.startAsync();
+        audioCodec.setOnCompleteListener(new EncodeUtil.OnCompleteListener() {
+            @Override
+            public void completed() {
+                audioCodec.release();
+                Log.d("Et", "编码完成");
+            }
+        });
     }
 
     private void stop() {

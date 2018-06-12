@@ -68,9 +68,9 @@ public class MiniActivity extends AppCompatActivity {
      */
     protected String appId = "10845396";
 
-    protected String appKey = "dhYbV4BojBozWdu29LyleSMn";
+    protected String appKey = "your appkey";
 
-    protected String secretKey = "6ea83dbd1fff5073b403cdd799ea3139";
+    protected String secretKey = "your secretkey";
 
     // TtsMode.MIX; 离在线融合，在线优先； TtsMode.ONLINE 纯在线； 没有纯离线
     private TtsMode ttsMode = TtsMode.ONLINE;

@@ -1,9 +1,11 @@
 package et.texttranslatepro.listener;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 
 import com.baidu.tts.client.SpeechError;
+import com.czt.mp3recorder.util.LameUtil;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -44,6 +46,10 @@ public class FileSaveListener extends UiMessageListener {
      */
     private BufferedOutputStream ttsFileBufferedOutputStream;
 
+    private FileOutputStream mp3FileBuf;
+    private byte[] mMp3Buffer;
+
+
     private static final String TAG = "FileSaveListener";
 
 
@@ -67,6 +73,8 @@ public class FileSaveListener extends UiMessageListener {
             FileOutputStream ttsFileOutputStream = new FileOutputStream(ttsFile);
             // 创建BufferedOutputStream对象
             ttsFileBufferedOutputStream = new BufferedOutputStream(ttsFileOutputStream);
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+            mp3FileBuf = new FileOutputStream(path + "/test1.mp3");
         } catch (IOException e) {
             // 请自行做错误处理
             e.printStackTrace();
@@ -93,11 +101,56 @@ public class FileSaveListener extends UiMessageListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        short[] shorts = toShortArray(data);
+        int encodedSize = LameUtil.encode(shorts, shorts, shorts.length, mMp3Buffer);
+        if (encodedSize > 0){
+            try {
+                mp3FileBuf.write(mMp3Buffer, 0, encodedSize);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private short[] toShortArray(byte[] src) {
+
+        int count = src.length >> 1;
+        short[] dest = new short[count];
+        for (int i = 0; i < count; i++) {
+            dest[i] = (short) (src[i * 2] << 8 | src[2 * i + 1] & 0xff);
+        }
+        return dest;
+    }
+
+    /**
+     * Flush all data left in lame buffer to file
+     */
+    private void flushAndRelease() {
+        //将MP3结尾信息写入buffer中
+        final int flushResult = LameUtil.flush(mMp3Buffer);
+        if (flushResult > 0) {
+            try {
+                mp3FileBuf.write(mMp3Buffer, 0, flushResult);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally{
+                if (mp3FileBuf != null) {
+                    try {
+                        mp3FileBuf.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                LameUtil.close();
+            }
+        }
     }
 
     @Override
     public void onSynthesizeFinish(String utteranceId) {
         super.onSynthesizeFinish(utteranceId);
+        flushAndRelease();
         close();
     }
 

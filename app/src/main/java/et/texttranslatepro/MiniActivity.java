@@ -271,18 +271,18 @@ public class MiniActivity extends AppCompatActivity {
         print("合成并播放 按钮已经点击");
         checkResult(result, "speak");
         String path=Environment.getExternalStorageDirectory().getAbsolutePath();
-        final EncodeUtil audioCodec = EncodeUtil.newInstance();
-        audioCodec.setEncodeType(MediaFormat.MIMETYPE_AUDIO_AAC);
-        audioCodec.setIOPath(path + "/output-0.pcm", path + "/test.mp3");
-        audioCodec.prepare();
-        audioCodec.startAsync();
-        audioCodec.setOnCompleteListener(new EncodeUtil.OnCompleteListener() {
-            @Override
-            public void completed() {
-                audioCodec.release();
-                Log.d("Et", "编码完成");
-            }
-        });
+//        final EncodeUtil audioCodec = EncodeUtil.newInstance();
+//        audioCodec.setEncodeType(MediaFormat.MIMETYPE_AUDIO_AAC);
+//        audioCodec.setIOPath(path + "/output-0.pcm", path + "/test.mp3");
+//        audioCodec.prepare();
+//        audioCodec.startAsync();
+//        audioCodec.setOnCompleteListener(new EncodeUtil.OnCompleteListener() {
+//            @Override
+//            public void completed() {
+//                audioCodec.release();
+//                Log.d("Et", "编码完成");
+//            }
+//        });
     }
 
     private void stop() {
